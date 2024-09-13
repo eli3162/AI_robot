@@ -1,0 +1,23 @@
+Part 1:
+
+sudo apt update && sudo apt upgrade -y
+sudo rpi-update
+sudo curl -sSL https://get.docker.com | sh
+sudo usermod -aG docker $USER
+sudo apt install git bc bison flex libssl-dev make libncurses5-dev && sudo wget https://raw.githubusercontent.com/jgartrel/rpi-source/master/rpi-source -O /usr/bin/rpi-source && sudo chmod +x /usr/bin/rpi-source && rpi-source --tag-update && rpi-source --default-config
+echo "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main" | sudo tee /etc/apt/sources.list.d/coral-edgetpu.list && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+sudo apt-get update
+sudo apt-get install cmake libedgetpu1-std devscripts debhelper dkms dh-dkms
+git clone https://github.com/google/gasket-driver.git
+cd gasket-driver && sudo debuild -us -uc -tc -b
+cd .. && sudo dpkg -i gasket-dkms_1.0-18_all.deb
+sudo sh -c "echo 'SUBSYSTEM==\"apex\", MODE=\"0660\", GROUP=\"apex\"' >> /etc/udev/rules.d/65-apex.rules"
+sudo groupadd apex && sudo adduser $USER apex
+sudo reboot
+
+Part 2:
+
+docker pull codeproject/ai-server:rpi64
+docker run --restart=always --name CodeProject.AI -d -p 32168:32168 \
+ --privileged -v /dev/bus/usb:/dev/bus/usb codeproject/ai-server:rpi64
+xdg-open http://localhost:32168
