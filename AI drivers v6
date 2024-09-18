@@ -1,5 +1,7 @@
 #!/bin/bash
 cd /
+echo "Software created by Ethan Li and Krishna, code bu DataSlayerMedia, Jeff Geerling, and MidnightLink"
+echo "use at your own risk"
 sudo apt update
 sudo apt upgrade -y
 sudo apt install devscripts debhelper dkms -y
