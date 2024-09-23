@@ -1,0 +1,91 @@
+Start with a fresh install of PiOS Lite 64-bit and connect using your SSH program of choice.
+
+First boot update:
+
+sudo apt update && sudo apt upgrade -y
+
+Update the kernel to the latest version:
+
+sudo rpi-update
+
+Install docker:
+
+sudo curl -sSL https://get.docker.com | sh
+
+Add your user to the docker group:
+
+sudo usermod -aG docker $USER
+
+Open the Pi's config file in Nano:
+
+sudo nano /boot/firmware/config.txt
+
+Add the following lines to the bottom of the file:
+
+#Enable the PCIe External connector.
+dtparam=pciex1
+kernel=kernel8.img
+#Enable Pineboards Hat Ai
+dtoverlay=pineboards-hat-ai
+#Upgrade to PCI Gen 3.0
+dtparam=pciex1
+dtparam=pciex1_gen=3
+Save and close the file by pressing CTRL+X, Y to confirm, and Enter to exit.
+
+Reboot the Pi:
+
+sudo reboot
+
+Install rpi-source to Fetch Kernel Headers, then fetch the Kernel Headers:
+
+sudo apt install git bc bison flex libssl-dev make libncurses5-dev && sudo wget https://raw.githubusercontent.com/jgartrel/rpi-source/master/rpi-source -O /usr/bin/rpi-source && sudo chmod +x /usr/bin/rpi-source && rpi-source --tag-update && rpi-source --default-config
+
+Add the Google Coral Edge TPU package repository and import the GPG key:
+
+echo "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main" | sudo tee /etc/apt/sources.list.d/coral-edgetpu.list && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+
+Update your package list:
+
+sudo apt-get update
+
+Install the necessary packages:
+
+sudo apt-get install cmake libedgetpu1-std devscripts debhelper dkms dh-dkms
+
+Clone the Gasket Driver repo:
+
+git clone https://github.com/google/gasket-driver.git
+
+Change into the directory and build the driver:
+
+cd gasket-driver && sudo debuild -us -uc -tc -b
+
+Go back to the parent directory and install the built package:
+
+cd .. && sudo dpkg -i gasket-dkms_1.0-18_all.deb
+
+Add a udev rule to manage device permissions:
+
+sudo sh -c "echo 'SUBSYSTEM==\"apex\", MODE=\"0660\", GROUP=\"apex\"' >> /etc/udev/rules.d/65-apex.rules"
+
+Create a new group and add your user to it:
+
+sudo groupadd apex && sudo adduser $USER apex
+
+Reboot your Pi:
+
+sudo reboot
+
+Download the latest version of Codeproject.AI server: RPi64 version
+
+docker pull codeproject/ai-server:rpi64
+
+Start the docker container and set it to run on boot
+
+docker run --restart=always --name CodeProject.AI -d -p 32168:32168 \
+ --privileged -v /dev/bus/usb:/dev/bus/usb codeproject/ai-server:rpi64
+Open the web interface of the newly set up CodeProject.AI server:
+
+http://piaddress:32168
+
+You should now show "Started Multi-TPU (TF-Lite)" and can send AI requests
