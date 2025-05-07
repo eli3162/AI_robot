@@ -17,13 +17,13 @@ except FileNotFoundError:
    ollama = False
 if ollama == False:
     print('Ollama is not installed! Please go to https://ollama.com/download to download Ollama for your device.')
-    print('The Script will now exit')
     exit()
 try:
     from ollama import chat
 except ImportError:
     print('Ollama Python Pipeline is not installed! Please install it by running pip install ollama')
     exit()
+print('Any models you choose to use must first be installed in the terminal using ollama pull [model]')
 chatmodel = str(input('Model: '))
 prompt = 'user'
 while True:
