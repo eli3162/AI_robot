@@ -30,7 +30,7 @@ while True:
     input = str(input('User: '))
     stream = chat(
         model=chatmodel,
-        messages=[{'role': prompt 'content': input}],
+        messages=[{'role': prompt, 'content': input}],
         stream=True,
     )
     print('AI: ', end='', flush=True)
