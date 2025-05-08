@@ -1,10 +1,34 @@
+import platform
 import sys
+operating_system = platform.system()
+if sys.version_info < (3, 11):
+    print("Your Python version is below 3.11. Please upgrade to Python 3.11 or higher.")
+    exit()
 if sys.version_info.major < 3:
     print("This script requires Python 3 or higher. Please upgrade your Python version.")
     exit()
 else:
     py_version = str(sys.version)
+if operating_system == 'Windows':
+    print(f"Warning! This script is ment to be run on Pi OS. If you are not a developer, please close this script.")
 import subprocess
+def installOllama():
+    try:
+        subprocess.run(
+            ["bash", "-c", "curl -fsSL https://ollama.com/install.sh | sh"],
+            check=True
+        )
+    except subprocess.CalledProcessError as e:
+        print(f"Ollama install failed with error: {e}")
+def installOllamaPython():
+    try:
+        subprocess.run(
+            ["bash", "-c", "pip install ollama"],
+            check=True
+        )
+    except subprocess.CalledProcessError as e:
+        print(f"Ollama Python Pipeline install failed with error: {e}")
+
 try:
     result = subprocess.run(["ollama", "--version"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     
@@ -17,12 +41,22 @@ except FileNotFoundError:
    ollama = False
 if ollama == False:
     print('Ollama is not installed! Please go to https://ollama.com/download to download Ollama for your device.')
-    exit()
+    if operating_system == "Linux":
+        autoInstallOllama = str(input('If you want, Ollama can be automatically installed on your system, Y/N: '))
+        if  autoInstallOllama == 'y' or autoInstallOllama == 'Y':
+            installOllama()
+    else:
+        exit()
 try:
     from ollama import chat
 except ImportError:
     print('Ollama Python Pipeline is not installed! Please install it by running pip install ollama')
-    exit()
+    if operating_system == "Linux":
+        autoInstallOllamaPython = str(input('If you want, Ollama Python Pipeline can be automatically installed, Y/N: '))
+        if autoInstallOllamaPython == 'y' or autoInstallOllamaPython == 'Y':
+            installOllamaPython()
+    else:
+        exit()
 print('Any models you choose to use must first be installed in the terminal using ollama pull [model]')
 chatmodel = str(input('Model: '))
 prompt = 'user'
