@@ -1,4 +1,4 @@
 #!/bin/bash
 git clone https://github.com/eli3162/AI_robot.git
 cd AI_robot
-install.sh
+python ai-robot.py
