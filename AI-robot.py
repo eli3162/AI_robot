@@ -2,8 +2,11 @@ import platform
 import sys
 operating_system = platform.system()
 if sys.version_info < (3, 11):
-    print(f"Your Python version is below 3.11. Please upgrade to Python 3.11 or higher.")
-    exit()
+    continueWithBadPython = str(input(f'Your Python Version is below 3.11, are you sure you want to continue? Continuing could cause this script to run unexpectedly. Continue? Y/N: ))
+    if continueWithBadPython == 'Y' or continueWithBadPython == 'y':
+        print('Continuing with Python ' + str(sys.version_info)))
+    else:
+        exit()
 if sys.version_info.major < 3:
     print(f"This script requires Python 3 or higher. Please upgrade your Python version.")
     exit()
