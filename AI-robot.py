@@ -2,10 +2,10 @@ import platform
 import sys
 operating_system = platform.system()
 if sys.version_info < (3, 11):
-    print("Your Python version is below 3.11. Please upgrade to Python 3.11 or higher.")
+    print(f"Your Python version is below 3.11. Please upgrade to Python 3.11 or higher.")
     exit()
 if sys.version_info.major < 3:
-    print("This script requires Python 3 or higher. Please upgrade your Python version.")
+    print(f"This script requires Python 3 or higher. Please upgrade your Python version.")
     exit()
 else:
     py_version = str(sys.version)
@@ -40,7 +40,7 @@ try:
 except FileNotFoundError:
    ollama = False
 if ollama == False:
-    print('Ollama is not installed! Please go to https://ollama.com/download to download Ollama for your device.')
+    print(f'Ollama is not installed! Please go to https://ollama.com/download to download Ollama for your device.')
     if operating_system == "Linux":
         autoInstallOllama = str(input('If you want, Ollama can be automatically installed on your system, Y/N: '))
         if  autoInstallOllama == 'y' or autoInstallOllama == 'Y':
@@ -50,7 +50,7 @@ if ollama == False:
 try:
     from ollama import chat
 except ImportError:
-    print('Ollama Python Pipeline is not installed! Please install it by running pip install ollama')
+    print(f'Ollama Python Pipeline is not installed! Please install it by running pip install ollama')
     if operating_system == "Linux":
         autoInstallOllamaPython = str(input('If you want, Ollama Python Pipeline can be automatically installed, Y/N: '))
         if autoInstallOllamaPython == 'y' or autoInstallOllamaPython == 'Y':
