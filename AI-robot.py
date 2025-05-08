@@ -1,20 +1,25 @@
 import platform
 import sys
+#Set operating_system var to the device's OS
 operating_system = platform.system()
+#Check if the Python version is below 3.11, if so, issues a warning!
 if sys.version_info < (3, 11):
     continueWithBadPython = str(input(f"Your Python Version is below 3.11, are you sure you want to continue? Continuing could cause this script to run unexpectedly. Continue? Y/N: "))
     if continueWithBadPython == 'Y' or continueWithBadPython == 'y':
         print('Continuing with Python ' + str(sys.version_info))
     else:
         exit()
+#If the version is below 3, the script will not work.
 if sys.version_info.major < 3:
     print(f"This script requires Python 3 or higher. Please upgrade your Python version.")
     exit()
 else:
     py_version = str(sys.version)
+#OS warning for Windows BETA testers
 if operating_system == 'Windows':
     print(f"Warning! This script is ment to be run on Pi OS. If you are not a developer, please close this script.")
 import subprocess
+#Installing Ollama for Linux
 def installOllama():
     try:
         subprocess.run(
@@ -23,6 +28,7 @@ def installOllama():
         )
     except subprocess.CalledProcessError as e:
         print(f"Ollama install failed with error: {e}")
+#Installing Ollama Python Pipeline for Linux
 def installOllamaPython():
     try:
         subprocess.run(
@@ -31,7 +37,7 @@ def installOllamaPython():
         )
     except subprocess.CalledProcessError as e:
         print(f"Ollama Python Pipeline install failed with error: {e}")
-
+#Test If Ollama is installed
 try:
     result = subprocess.run(["ollama", "--version"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     
@@ -50,6 +56,7 @@ if ollama == False:
             installOllama()
     else:
         exit()
+#Check if Ollama Python Pipeline
 try:
     from ollama import chat
 except ImportError:
@@ -60,9 +67,11 @@ except ImportError:
             installOllamaPython()
     else:
         exit()
+#Warn user to install models first
 print('Any models you choose to use must first be installed in the terminal using ollama pull [model]')
 chatmodel = str(input('Model: '))
 prompt = 'user'
+#Chatting interface code
 while True:
     input = str(input('User: '))
     stream = chat(
@@ -71,5 +80,6 @@ while True:
         stream=True,
     )
     print('AI: ', end='', flush=True)
+    #Make sure the output updates before it's done generating
     for chunk in stream:
       print(chunk['message']['content'], end='', flush=True)
