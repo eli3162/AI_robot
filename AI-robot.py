@@ -2,7 +2,7 @@ import platform
 import sys
 operating_system = platform.system()
 if sys.version_info < (3, 11):
-    continueWithBadPython = str(input(f'Your Python Version is below 3.11, are you sure you want to continue? Continuing could cause this script to run unexpectedly. Continue? Y/N: ))
+    continueWithBadPython = str(input(f"Your Python Version is below 3.11, are you sure you want to continue? Continuing could cause this script to run unexpectedly. Continue? Y/N: "))
     if continueWithBadPython == 'Y' or continueWithBadPython == 'y':
         print('Continuing with Python ' + str(sys.version_info)))
     else:
